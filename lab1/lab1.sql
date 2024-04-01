@@ -23,7 +23,7 @@ publisher VARCHAR(64) DEFAULT NULL,
 pages INT DEFAULT NULL CHECK(pages > 0),
 format VARCHAR(32) DEFAULT NULL,
 date DATE DEFAULT NULL,
-circulation INT DEFAULT 0 CHECK(circulation >= 0),
+circulation INT DEFAULT NULL CHECK(circulation >= 1),
 topic VARCHAR(64) DEFAULT NULL,
 category VARCHAR(64) DEFAULT NULL
 );
