@@ -36,7 +36,7 @@ SELECT CONCAT(UPPER(SUBSTRING(title, 1, 10)), '...', UPPER(SUBSTRING(title, CHAR
 SELECT title, date, DAY(date), MONTH(date), YEAR(date) FROM library_storage;
 
 # 13. Вивести значення наступних колонок: назва, дата, дата в форматі 'dd / mm / yyyy':
-SELECT title, date, DATE_FORMAT(date, '%d/%m/%y') FROM library_storage;
+SELECT title, date, DATE_FORMAT(date, '%d/%m/%Y') FROM library_storage;
 
 # 14. Вивести значення наступних колонок: код, ціна, ціна в грн., ціна в євро, ціна в руб:
 SELECT id, price, price * (39), price * (0.9), price * (91) FROM library_storage;
