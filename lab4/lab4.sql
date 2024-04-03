@@ -103,7 +103,7 @@ GROUP BY
   
 # 10. Змінити п. 9 так щоб до складу статистики потрапили дані з роками більшими за 2000.
 SELECT 
-    SUBSTRING(title, 1, 1) AS first_letter,
+    SUBSTRING(title, 1, 1) AS first_symbol,
     COUNT(*) AS total_count,
     SUM(price) AS total_price
 FROM 
@@ -117,7 +117,7 @@ GROUP BY
 
 # 11. Змінити п. 10. Відсортувати статистику по спадаючій перших букв назви.
 SELECT 
-    SUBSTRING(title, 1, 1) AS first_letter,
+    SUBSTRING(title, 1, 1) AS first_symbol,
     COUNT(*) AS total_count,
     SUM(price) AS total_price
 FROM 
