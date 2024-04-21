@@ -168,4 +168,21 @@ VALUES
 # e. Зробити висновки
   
 # 5. Створити і перевірити представлення для отримання універсального відношення з набору нормалізованих таблиць бази даних.
-  
+  SELECT
+	b.n,
+	b.id,
+	b.novelty,
+	b.title,
+	b.price,
+	p.publisher,
+	b.pages,
+	b.format,
+	b.date,
+	b.circulation,
+	t.topic,
+	c.category
+FROM
+	book_info AS b
+INNER JOIN book_publisher AS p ON b.publisher = p.id
+INNER JOIN book_topic AS t ON b.topic = t.id
+INNER JOIN book_category AS c ON b.category = c.id;
