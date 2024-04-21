@@ -32,7 +32,7 @@
 	novelty VARCHAR(3) NOT NULL,
 	title VARCHAR(128) NOT NULL,
 	price DECIMAL(5,2) DEFAULT 0 CHECK(price >= 0),
-	publisher INT NOT NULL,
+	publisher INT NOT NULL ,
 	pages INT DEFAULT NULL CHECK(pages > 0),
 	format VARCHAR(32) DEFAULT NULL,
 	date DATE DEFAULT NULL,
@@ -70,6 +70,7 @@
 	  ('Windows 2000'),
 	  ('Linux'),
 	  ('Unix'),
+	  ('Інші операційні системи'),
 	  ('C&C++'),
 	  ('SQL');
 	
@@ -123,8 +124,8 @@
 	  
 	(188,5170,'No','Linux версії',24.43,(SELECT id FROM book_publisher WHERE publisher = 'ДМК'),
 	  346,'70х100/16','2000-09-29',5000,(SELECT id FROM book_topic WHERE topic = 'Операційні системи'),(SELECT id FROM book_category WHERE category = 'Linux')),
-	  
-	(191,860,'No','Операційна система UNIX',3.50,(SELECT id FROM book_category WHERE category = 'Видавнича група BHV'),
+	
+	(191,860,'No','Операційна система UNIX',3.50,(SELECT id FROM book_publisher WHERE publisher = 'Видавнича група BHV'),
 	  395,'84х100/16','1997-05-05',5000,(SELECT id FROM book_topic WHERE topic = 'Операційні системи'),(SELECT id FROM book_category WHERE category = 'Unix')),
 	  
 	(203,44,'No','Відповіді на актуальні запитання щодо OS/2 Warp',5.00,(SELECT id FROM book_publisher WHERE publisher = 'DiaSoft'),
@@ -133,7 +134,7 @@
 	(206,5176,'No','Windows Ме. Супутник користувача',12.79,(SELECT id FROM book_publisher WHERE publisher = 'Видавнича група BHV'),
 	  306,'','2000-10-10',5000,(SELECT id FROM book_topic WHERE topic = 'Операційні системи'),(SELECT id FROM book_category WHERE category = 'Інші операційні системи')),
 	  
-	(209,5462,'No','Мова програмування С++. Лекції та вправи',29.00,(SELECT id FROM book_category WHERE category = 'DiaSoft'),
+	(209,5462,'No','Мова програмування С++. Лекції та вправи',29.00,(SELECT id FROM book_publisher WHERE publisher = 'DiaSoft'),
 	  656,'84х108/16','2000-12-12',5000,(SELECT id FROM book_topic WHERE topic = 'Програмування'),(SELECT id FROM book_category WHERE category = 'C&C++')),
 	  
 	(210,4982,'No','Мова програмування С. Лекції та вправи',29.00,(SELECT id FROM book_publisher WHERE publisher = 'DiaSoft'),
