@@ -27,7 +27,7 @@ FROM book_info as b
 INNER JOIN book_topic AS t ON b.topic = t.id
 INNER JOIN book_category AS c ON b.category = c.id
 INNER JOIN book_publisher AS p ON b.publisher = p.id
-ORDER BY b.topic DESC, b.category DESC
+ORDER BY b.topic DESC, b.category DESC;
 END //
 DELIMITER ;
 
