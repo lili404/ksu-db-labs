@@ -1,4 +1,18 @@
 -- 1. Кількість тем може бути в діапазоні від 5 до 10.
+DELIMITER //
+CREATE TRIGGER trigger1 BEFORE INSERT ON book_topic
+FOR EACH ROW
+BEGIN
+  IF (SELECT COUNT(*) FROM book_topic.topic) > 10
+  THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Кількість тем більша 10';
+  ELSEIF (select count(*) from book_topic.topic) < 5
+  THEN
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT ='Кількість менша 5 ';
+  END IF;
+END; 
+//
+DELIMITER ;
 
 -- 2. Новинкою може бути тільки книга видана в поточному році.
 
