@@ -237,7 +237,6 @@ INSERT INTO book_info VALUES
   (SELECT id FROM book_category WHERE category = 'Підручники'));
 
 -- 10. Видавництво BHV не випускає книги формату 60х88 / 16.
-
 DELIMITER //
 CREATE TRIGGER trigger10
 BEFORE INSERT ON book_info
