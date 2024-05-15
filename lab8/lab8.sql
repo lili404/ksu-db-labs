@@ -171,21 +171,20 @@ INSERT INTO book_info VALUES
   (SELECT id FROM book_category WHERE category = 'Підручники'));
 
 -- 9. Видавництво не може випустити більше 10 новинок протягом одного місяця поточного року. 
--- DOES NOT SEEM TO WORK ATM. GOTTA FIX LATER
 DELIMITER //
 CREATE TRIGGER trigger9
 BEFORE INSERT ON book_info
 FOR EACH ROW
 BEGIN
-  DECLARE total_novelty_books INT;
-  SELECT COUNT(*) INTO total_novelty_books
-  FROM book_info
-  WHERE publisher = NEW.publisher
-    AND YEAR(date) = YEAR(CURRENT_DATE)
-    AND MONTH(date) = MONTH(CURRENT_DATE)
-    AND novelty = 'Yes';
-  IF total_novelty_books > 10 THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Видавництво не може випустити більше 10 новинок протягом одного місяця поточного року.';
+  IF NEW.novelty = 'Yes' THEN
+    IF (SELECT COUNT(*)
+        FROM book_info
+        WHERE publisher = NEW.publisher
+          AND YEAR(date) = YEAR(CURRENT_DATE())
+          AND MONTH(date) = MONTH(CURRENT_DATE())
+          AND novelty = 'Yes') >= 10 THEN
+      SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Видавництво не може випустити більше 10 новинок протягом одного місяця поточного року.';
+    END IF;
   END IF;
 END //
 DELIMITER ;
@@ -238,3 +237,21 @@ INSERT INTO book_info VALUES
   (SELECT id FROM book_category WHERE category = 'Підручники'));
 
 -- 10. Видавництво BHV не випускає книги формату 60х88 / 16.
+
+DELIMITER //
+CREATE TRIGGER trigger10
+BEFORE INSERT ON book_info
+FOR EACH ROW
+BEGIN
+  IF NEW.publisher = (
+  SELECT id FROM book_publisher WHERE publisher = 'Видавнича група BHV') 
+  AND NEW.format = '60x88/16' THEN 
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Видавнича група BHV не випускає книги формату 60х88/16';
+  END IF;
+END
+// DELIMITER ;
+
+INSERT INTO book_info VALUES
+(320,10020,'No','Назва',NULL,(SELECT id FROM book_publisher WHERE publisher = 'Видавнича група BHV'),
+  NULL,'60x88/16',NULL,NULL,(SELECT id FROM book_topic WHERE topic = 'Використання ПК в цілому'),
+  (SELECT id FROM book_category WHERE category = 'Підручники'));
