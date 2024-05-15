@@ -3,21 +3,28 @@ DELIMITER //
 CREATE TRIGGER trigger1 BEFORE INSERT ON book_topic
 FOR EACH ROW
 BEGIN
-  IF (SELECT COUNT(*) FROM book_topic) > 10
+  IF (SELECT COUNT(*) FROM book_topic) >= 10
   THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Кількість тем більша за 10';
-  ELSEIF (SELECT COUNT(*) FROM book_topic) < 5
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Кількість тем не може бути більшою за 10';
+  ELSEIF (SELECT COUNT(*) FROM book_topic) <= 5
   THEN
-    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Кількість тем менша за 5';
+    SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Кількість тем не може бути меншою за 5';
   END IF;
 END; 
 //
 DELIMITER ;
 
 INSERT INTO book_topic(topic) VALUES
-  ('топік1'),
-  ('топік2'),
-  ('топік3');
+  ('топік4'),
+  ('топік5'),
+  ('топік6'),
+  ('топік7'),
+  ('топік8'),
+  ('топік9'),
+  ('топік10');
+
+INSERT INTO book_topic(topic) VALUES
+  ('топік11');
 
 -- 2. Новинкою може бути тільки книга видана в поточному році.
 DELIMITER //
