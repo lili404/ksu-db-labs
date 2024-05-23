@@ -136,11 +136,11 @@ BEGIN
     IF is_finished THEN
       LEAVE read_loop;
     END IF;
-    SELECT CONCAT('Book ID: ', book_id, ', Name: ', book_name, ', Date: ', book_date) AS bookInfo;
+    SELECT CONCAT('Name: ', book_name, ', Date: ', book_date) AS bookInfo;
   END LOOP;
   CLOSE book_cursor;
 END //
 DELIMITER ;
 
-CALL function5(2020);
+CALL function5(1996);
 DROP PROCEDURE function5;
