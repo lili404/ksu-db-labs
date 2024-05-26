@@ -28,9 +28,16 @@ CREATE TABLE animal (
   FOREIGN KEY (health_status) REFERENCES health_report(id)
 );
 
+CREATE TABLE salary (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  salary INT NOT NULL
+);
+
 CREATE TABLE job_position (
   id INT PRIMARY KEY AUTO_INCREMENT,
-  position VARCHAR(32) UNIQUE NOT NULL
+  position VARCHAR(32) UNIQUE NOT NULL,
+  salary INT NOT NULL,
+  FOREIGN KEY (salary) REFERENCES salary(id)
 );
 
 CREATE TABLE staff (
@@ -40,6 +47,24 @@ CREATE TABLE staff (
   position_id INT NOT NULL,
   shift VARCHAR(5) DEFAULT NULL,
   FOREIGN KEY (position_id) REFERENCES job_position(id)
+);
+
+CREATE TABLE medicine (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  type VARCHAR(32) NOT NULL UNIQUE,
+  available DECIMAL(5,2) DEFAULT NULL
+);
+
+CREATE TABLE health_care (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  animal_id INT NOT NULL,
+  medicine_id INT NOT NULL,
+  date DATE NOT NULL,
+  staff_id INT NOT NULL,
+  quantity DECIMAL(5,2) NOT NULL,
+  FOREIGN KEY (animal_id) REFERENCES animal(id),
+  FOREIGN KEY (medicine_id) REFERENCES medicine(id),
+  FOREIGN KEY (staff_id) REFERENCES staff(id)
 );
 
 CREATE TABLE food (
@@ -74,10 +99,4 @@ CREATE TABLE ticket (
   visit_date DATETIME NOT NULL,
   used BOOLEAN NOT NULL DEFAULT FALSE,
   FOREIGN KEY (visitor_id) REFERENCES visitor(id)
-);
-
-CREATE TABLE medicine (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  type VARCHAR(32) NOT NULL UNIQUE,
-  available DECIMAL(5,2) DEFAULT NULL
 );
