@@ -1,14 +1,3 @@
-CREATE TABLE health_report (
-  id INT PRIMARY KEY AUTO_INCREMENT,
-  animal_id INT NOT NULL UNIQUE,
-  veterinarian_id INT NOT NULL,
-  completion_date DATE NOT NULL,
-  diagnosis TEXT NOT NULL,
-  treatment TEXT NULL,
-  FOREIGN KEY (animal_id) REFERENCES animal(id),
-  FOREIGN KEY (veterinarian_id) REFERENCES veterinarian(id)
-);
-
 CREATE TABLE specie (
   id INT PRIMARY KEY AUTO_INCREMENT,
   type VARCHAR(64) UNIQUE NOT NULL
@@ -19,8 +8,15 @@ CREATE TABLE breed (
   type VARCHAR(64) UNIQUE NOT NULL
 );
 
+CREATE TABLE health_report (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  completion_date DATE NOT NULL,
+  diagnosis TEXT NOT NULL,
+  treatment TEXT NULL
+);
+
 CREATE TABLE animal (
-  id INT PRIMARY KEY,
+  id INT PRIMARY KEY AUTO_INCREMENT,
   specie INT NOT NULL,
   breed INT NOT NULL,
   birth_date DATE DEFAULT NULL,
@@ -29,17 +25,24 @@ CREATE TABLE animal (
   health_status INT NOT NULL UNIQUE,
   FOREIGN KEY (specie) REFERENCES specie(id),
   FOREIGN KEY (breed) REFERENCES breed(id),
-  FOREIGN KEY (health_status) REFERENCES health_report(animal_id)
+  FOREIGN KEY (health_status) REFERENCES health_report(id)
 );
 
-CREATE TABLE keeper (
+CREATE TABLE job_position (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  position VARCHAR(32) UNIQUE NOT NULL
+);
+
+CREATE TABLE staff (
   id INT PRIMARY KEY AUTO_INCREMENT,
   full_name VARCHAR(128) NOT NULL,
   gender VARCHAR(1) NOT NULL,
-  shift VARCHAR(5) DEFAULT NULL
+  position_id INT NOT NULL,
+  shift VARCHAR(5) DEFAULT NULL,
+  FOREIGN KEY (position_id) REFERENCES job_position(id)
 );
 
-CREATE TABLE food_storage (
+CREATE TABLE food (
   id INT PRIMARY KEY AUTO_INCREMENT,
   type VARCHAR(32) NOT NULL UNIQUE,
   available DECIMAL(5,2) DEFAULT NULL,
@@ -53,10 +56,8 @@ CREATE TABLE feeding_schedule (
   time TIME NOT NULL,
   food_id INT NOT NULL,
   quantity DECIMAL(5,2) NOT NULL,
-  keeper_id INT NOT NULL,
   FOREIGN KEY (animal_id) REFERENCES animal(id),
-  FOREIGN KEY (food_id) REFERENCES food_storage(id),
-  FOREIGN KEY (keeper_id) REFERENCES keeper(id)
+  FOREIGN KEY (food_id) REFERENCES food(id)
 );
 
 CREATE TABLE visitor (
@@ -72,10 +73,10 @@ CREATE TABLE ticket (
   buy_date DATETIME NOT NULL,
   visit_date DATETIME NOT NULL,
   used BOOLEAN NOT NULL DEFAULT FALSE,
-  FOREIGN KEY (visitor_id) REFERENCES visitors(id)
+  FOREIGN KEY (visitor_id) REFERENCES visitor(id)
 );
 
-CREATE TABLE med_storage (
+CREATE TABLE medicine (
   id INT PRIMARY KEY AUTO_INCREMENT,
   type VARCHAR(32) NOT NULL UNIQUE,
   available DECIMAL(5,2) DEFAULT NULL
