@@ -10,7 +10,7 @@ BEGIN
     RETURN IFNULL(total_cost, 0.00);
 END //
 DELIMITER ;
-SELECT totalCostByYear(1996) AS totalBookCost(YEAR)
+SELECT totalCostByYear(1996) AS totalBookCost;
 
 -- 2. Розробити і перевірити табличну (inline) функцію, яка повертає список книг виданих в певному році.
 -- Табличні функції існують лише в SQL Server, PostgreSQL
