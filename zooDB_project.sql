@@ -35,6 +35,7 @@ CREATE TABLE staff (
   id INT PRIMARY KEY AUTO_INCREMENT,
   full_name VARCHAR(128) NOT NULL,
   gender VARCHAR(1) NOT NULL,
+  age INT NOT NULL,
   position_id INT NOT NULL,
   shift VARCHAR(5) DEFAULT NULL,
   FOREIGN KEY (position_id) REFERENCES job_position(id)
@@ -80,6 +81,7 @@ CREATE TABLE visitor (
   id INT PRIMARY KEY AUTO_INCREMENT,
   full_name VARCHAR(128) NOT NULL UNIQUE,
   gender VARCHAR(1) NOT NULL,
+  age INT NOT NULL,
   visit_count INT NOT NULL DEFAULT 0
 );
 
@@ -93,27 +95,33 @@ CREATE TABLE ticket (
 );
 
 -- INSERT VALUES
--- Insert visitor info
-INSERT INTO visitor (full_name, gender) VALUES
-  ('John Doe', 'M'),
-  ('Jane Smith', 'F'),
-  ('Alex Johnson', 'M'),
-  ('Emily Davis', 'F'),
-  ('Michael Brown', 'M'),
-  ('Pat Taylor', 'M'),
-  ('Chris Wilson', 'M'),
-  ('Jessica Garcia', 'F');
+-- Insert salaries
+INSERT INTO salary(salary) VALUES
+  (50000),
+  (35000),
+  (20000),
+  (15000);
 
--- Insert ticket info
-INSERT INTO ticket (visitor_id, buy_date, visit_date) VALUES
-  ((SELECT id FROM visitor WHERE full_name = 'John Doe'), '2024-06-01 08:25:21', '2024-06-02 08:00:00'),
-  ((SELECT id FROM visitor WHERE full_name = 'Jane Smith'), '2024-06-02 13:10:34', '2024-06-03 08:00:00'),
-  ((SELECT id FROM visitor WHERE full_name = 'Alex Johnson'), '2024-06-03 18:27:13', '2024-06-04 08:00:00'),
-  ((SELECT id FROM visitor WHERE full_name = 'Emily Davis'), '2024-06-04 07:27:27', '2024-06-05 08:00:00'),
-  ((SELECT id FROM visitor WHERE full_name = 'Michael Brown'), '2024-05-06 04:11:04', '2024-06-06 08:00:00'),
-  ((SELECT id FROM visitor WHERE full_name = 'Pat Taylor'), '2024-06-06 14:11:29', '2024-06-07 08:00:00'),
-  ((SELECT id FROM visitor WHERE full_name = 'Chris Wilson'), '2024-06-07 13:54:43', '2024-06-08 08:00:00'),
-  ((SELECT id FROM visitor WHERE full_name = 'Jessica Garcia'), '2024-06-08 12:39:21', '2024-06-09 08:00:00');
+-- Insert job positions
+INSERT INTO job_position(position, salary) VALUES
+  ('Zoo Manager', (SELECT id FROM salary WHERE salary = 50000)),
+  ('Veterinarian', (SELECT id FROM salary WHERE salary = 35000)),
+  ('Keeper', (SELECT id FROM salary WHERE salary = 20000)),
+  ('Cashier', (SELECT id FROM salary WHERE salary = 15000));
+
+-- Insert staff members
+INSERT INTO staff(full_name, gender, age, position_id, shift) VALUES
+  -- Zoo Manager
+  ('John Doe', 'M', 30, (SELECT id FROM job_position WHERE position = 'Zoo Manager'), 'Day'),
+  -- Veterinarians
+  ('Jane Smith', 'F', 28, (SELECT id FROM job_position WHERE position = 'Veterinarian'), 'Day'),
+  ('Michael Johnson', 'M', 36, (SELECT id FROM job_position WHERE position = 'Veterinarian'), 'Night'),
+  -- Keepers
+  ('Emily Brown', 'F', 22, (SELECT id FROM job_position WHERE position = 'Keeper'), 'Day'),
+  ('David Lee', 'M', 24, (SELECT id FROM job_position WHERE position = 'Keeper'), 'Day'),
+  ('Jessica Taylor', 'F', 20, (SELECT id FROM job_position WHERE position = 'Keeper'), 'Night'),
+  -- Cashier
+  ('Chris Evans', 'M', 26, (SELECT id FROM job_position WHERE position = 'Cashier'), 'Day');
 
 -- Insert specie types
 INSERT INTO specie (type) VALUES 
@@ -154,34 +162,6 @@ INSERT INTO animal(specie, breed, birth_date, gender, weight) VALUES
   ((SELECT id FROM specie WHERE type = 'Zebra'), (SELECT id FROM breed WHERE type = 'Plains Zebra'), '2015-04-19', 'M', 350.00),
   ((SELECT id FROM specie WHERE type = 'Parrot'), (SELECT id FROM breed WHERE type = 'African Grey Parrot'), '2018-08-02', 'M', 0.50);
 
--- Insert salaries
-INSERT INTO salary(salary) VALUES
-  (50000),
-  (35000),
-  (20000),
-  (15000);
-
--- Insert job positions
-INSERT INTO job_position(position, salary) VALUES
-  ('Zoo Manager', (SELECT id FROM salary WHERE salary = 50000)),
-  ('Veterinarian', (SELECT id FROM salary WHERE salary = 35000)),
-  ('Keeper', (SELECT id FROM salary WHERE salary = 20000)),
-  ('Cashier', (SELECT id FROM salary WHERE salary = 15000));
-
--- Insert staff members
-INSERT INTO staff(full_name, gender, position_id, shift) VALUES
-  -- Zoo Manager
-  ('John Doe', 'M', (SELECT id FROM job_position WHERE position = 'Zoo Manager'), 'Day'),
-  -- Veterinarians
-  ('Jane Smith', 'F', (SELECT id FROM job_position WHERE position = 'Veterinarian'), 'Day'),
-  ('Michael Johnson', 'M', (SELECT id FROM job_position WHERE position = 'Veterinarian'), 'Night'),
-  -- Keepers
-  ('Emily Brown', 'F', (SELECT id FROM job_position WHERE position = 'Keeper'), 'Day'),
-  ('David Lee', 'M', (SELECT id FROM job_position WHERE position = 'Keeper'), 'Day'),
-  ('Jessica Taylor', 'F', (SELECT id FROM job_position WHERE position = 'Keeper'), 'Night'),
-  -- Cashier
-  ('Chris Evans', 'M', (SELECT id FROM job_position WHERE position = 'Cashier'), 'Day');
-
 -- Insert available medicine
 INSERT INTO medicine (type, available)
 VALUES ('Doxycycline', 10.00),
@@ -195,6 +175,7 @@ VALUES ('Doxycycline', 10.00),
        ('Carprofen', 15.00),
        ('Meloxicam', 5.00);
 
+-- Insert health care info per animal
 INSERT INTO health_care (animal_id, date, diagnosis, medicine_id, quantity, staff_id) VALUES
   -- Lion
   ((SELECT id FROM animal WHERE specie = (SELECT id FROM specie WHERE type = 'Lion')), CURDATE(), 'Routine checkup', NULL, NULL, (SELECT id FROM staff WHERE full_name = 'Jane Smith')),
@@ -217,6 +198,7 @@ INSERT INTO health_care (animal_id, date, diagnosis, medicine_id, quantity, staf
   -- Parrot
   ((SELECT id FROM animal WHERE specie = (SELECT id FROM specie WHERE type = 'Parrot')), CURDATE(), 'Feather examination', NULL, NULL, (SELECT id FROM staff WHERE full_name = 'Michael Johnson'));
 
+-- Insert food types and available quantity
 INSERT INTO food (type, available, units) VALUES
   ('Meat', 400.00, 'kg'),
   ('Fruits', 160.00, 'kg'),
@@ -225,6 +207,7 @@ INSERT INTO food (type, available, units) VALUES
   ('Grass', 150.00, 'kg'),
   ('Seeds', 10.00, 'kg');
 
+-- Insert feeding schedule per animal
 INSERT INTO feeding_schedule (animal_id, time, food_id, quantity) VALUES
   -- Lion
   ((SELECT id FROM animal WHERE specie = (SELECT id FROM specie WHERE type = 'Lion')), '08:00:00', (SELECT id FROM food WHERE type = 'Meat'), 5.00),
@@ -246,4 +229,27 @@ INSERT INTO feeding_schedule (animal_id, time, food_id, quantity) VALUES
   ((SELECT id FROM animal WHERE specie = (SELECT id FROM specie WHERE type = 'Zebra')), '12:00:00', (SELECT id FROM food WHERE type = 'Grass'), 12.00),
   -- Parrot
   ((SELECT id FROM animal WHERE specie = (SELECT id FROM specie WHERE type = 'Parrot')), '12:30:00', (SELECT id FROM food WHERE type = 'Seeds'), 0.50);
+
+-- Insert visitor info
+INSERT INTO visitor (full_name, gender, age) VALUES
+  ('John Doe', 'M', 20),
+  ('Jane Smith', 'F', 16),
+  ('Alex Johnson', 'M', 24),
+  ('Emily Davis', 'F', 18),
+  ('Michael Brown', 'M', 15),
+  ('Pat Taylor', 'M', 21),
+  ('Chris Wilson', 'M', 32),
+  ('Jessica Garcia', 'F', 28);
+
+-- Insert ticket info
+INSERT INTO ticket (visitor_id, buy_date, visit_date) VALUES
+  ((SELECT id FROM visitor WHERE full_name = 'John Doe'), '2024-06-01 08:25:21', '2024-06-02 08:00:00'),
+  ((SELECT id FROM visitor WHERE full_name = 'Jane Smith'), '2024-06-02 13:10:34', '2024-06-03 08:00:00'),
+  ((SELECT id FROM visitor WHERE full_name = 'Alex Johnson'), '2024-06-03 18:27:13', '2024-06-04 08:00:00'),
+  ((SELECT id FROM visitor WHERE full_name = 'Emily Davis'), '2024-06-04 07:27:27', '2024-06-05 08:00:00'),
+  ((SELECT id FROM visitor WHERE full_name = 'Michael Brown'), '2024-05-06 04:11:04', '2024-06-06 08:00:00'),
+  ((SELECT id FROM visitor WHERE full_name = 'Pat Taylor'), '2024-06-06 14:11:29', '2024-06-07 08:00:00'),
+  ((SELECT id FROM visitor WHERE full_name = 'Chris Wilson'), '2024-06-07 13:54:43', '2024-06-08 08:00:00'),
+  ((SELECT id FROM visitor WHERE full_name = 'Jessica Garcia'), '2024-06-08 12:39:21', '2024-06-09 08:00:00');
+
 
